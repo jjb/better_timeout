@@ -55,17 +55,23 @@ module Timeout
     exception = klass || Class.new(ExitException)
     begin
       begin
-        x = Thread.current
+        current_thread = Thread.current
+
+        x = Thread.start{ yield(sec) }
+
         y = Thread.start {
           begin
             sleep sec
           rescue => e
             x.raise e
           else
-            x.raise exception, "execution expired"
+            x.kill
+            # x.join
+            current_thread.raise exception, "execution expired"
           end
         }
-        return yield(sec)
+
+        x.value
       ensure
         if y
           y.kill
