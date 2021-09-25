@@ -63,7 +63,8 @@ module Timeout
           rescue => e
             x.raise e
           else
-            x.kill
+            x.raise exception, "execution expired"
+            x.join
             current_thread.raise exception, "execution expired"
           end
         }
