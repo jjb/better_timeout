@@ -85,11 +85,9 @@ class TestTimeout < Test::Unit::TestCase
     # EXPECTED
     assert $inner_attempted
     assert !$inner_succeeded
+    assert $caught_in_inner
     assert $inner_ensure
     assert $outer_ensure
-
-    # WEIRD
-    assert $caught_in_inner
 
     # BAD
     assert !$raised_in_outer && $not_raised_in_outer
@@ -102,11 +100,9 @@ class TestTimeout < Test::Unit::TestCase
     # EXPECTED
     assert $inner_attempted
     assert !$inner_succeeded
+    assert $caught_in_inner
     assert $inner_ensure
     assert $outer_ensure
-
-    # WEIRD
-    assert $caught_in_inner
 
     # BAD
     assert !$raised_in_outer && $not_raised_in_outer
@@ -119,11 +115,9 @@ class TestTimeout < Test::Unit::TestCase
     # EXPECTED
     assert $inner_attempted
     assert !$inner_succeeded
+    assert $caught_in_inner
     assert $inner_ensure
     assert $outer_ensure
-
-    # WEIRD
-    assert $caught_in_inner
 
     # BAD
     assert !$raised_in_outer && $not_raised_in_outer
@@ -139,7 +133,6 @@ class TestTimeout < Test::Unit::TestCase
     assert !$caught_in_inner
     assert $inner_ensure
     assert $outer_ensure
-
     assert $raised_in_outer && !$not_raised_in_outer
   end
 
@@ -150,13 +143,11 @@ class TestTimeout < Test::Unit::TestCase
     # EXPECTED
     assert $inner_attempted
     assert !$inner_succeeded
+    assert $caught_in_inner
     assert $inner_ensure
     assert $outer_ensure
 
-    # WEIRD
-    assert $caught_in_inner
-
-    # VERY BAD
+    # BAD
     assert !$raised_in_outer && $not_raised_in_outer
   end
 
