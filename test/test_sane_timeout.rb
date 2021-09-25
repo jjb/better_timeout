@@ -1,5 +1,5 @@
 require 'test/unit'
-require '../sane-timeout'
+require_relative '../lib/sane_timeout.rb'
 require 'thread'
 
 class TestTimeout < Test::Unit::TestCase
