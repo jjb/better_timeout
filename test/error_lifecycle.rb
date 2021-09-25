@@ -1,7 +1,7 @@
 class MyStandardError < StandardError; end
 class MyException< Exception; end
 
-def subject(throws, catches)
+def subject(error_to_raise, error_to_rescue)
   $inner_attempted = nil
   $inner_succeeded = nil
   $caught_in_inner = nil
@@ -11,11 +11,11 @@ def subject(throws, catches)
   $not_raised_in_outer = nil
   $outer_ensure = nil
 
-  Timeout.timeout(0.1, throws){
+  Timeout.timeout(0.1, error_to_raise){
     begin
       $inner_attempted = true
       sleep 10
-    rescue catches
+    rescue error_to_rescue
       $caught_in_inner = true
     else
       $inner_succeeded = true
