@@ -63,37 +63,7 @@ class TestTimeout < Test::Unit::TestCase
   #       The ones marked weird, bad, and very bad should not, and their
   #       passing is demonstrating the brokenness.
 
-  def subject(throws, catches)
-    $inner_attempted=nil
-    $inner_succeeded=nil
-    $caught_in_inner=nil
-    $inner_ensure=nil
-
-    $raised_in_outer=nil
-    $not_raised_in_outer=nil
-    $outer_ensure=nil
-
-    begin
-      Timeout.timeout(0.1, throws){
-        begin
-          $inner_attempted=true
-          sleep 10
-        rescue catches
-          $caught_in_inner=true
-        else
-          $inner_succeeded=true
-        ensure
-          $inner_ensure=true
-        end
-      }
-    rescue Exception
-      $raised_in_outer = true
-    else
-      $not_raised_in_outer = true
-    ensure
-      $outer_ensure = true
-    end
-  end
+  require_relative 'error_lifecycle.rb'
 
   # when an exception to raise is not specified and the inner code does not catch Exception
   def test_1
