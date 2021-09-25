@@ -65,7 +65,6 @@ class TestTimeout < Test::Unit::TestCase
   def expectations
     assert $inner_attempted,  "Inner was not attempted"
     assert !$inner_succeeded, "Inner did not succeed"
-    assert !$caught_in_inner, "Exception was caught in inner"
     assert $inner_ensure, "Inner ensure was not reached"
     assert $raised_in_outer,  "Exception was not raised in outer"
     assert $outer_ensure, "Outer ensure succeeded"
@@ -76,36 +75,42 @@ class TestTimeout < Test::Unit::TestCase
   def test_1
     subject(nil, StandardError)
     expectations
+    assert !$caught_in_inner, "Exception was caught in inner"
   end
 
   # when an exception to raise is not specified and the inner code does catch Exception
   def test_2
     subject(nil, Exception)
     expectations
+    assert $caught_in_inner, "Exception was not caught in inner"
   end
 
   # when an exception to raise is StandardError and the inner code does not catch Exception
   def test_3
     subject(MyStandardError, StandardError)
     expectations
+    assert $caught_in_inner, "Exception was not caught in inner"
   end
 
   # when an exception to raise is StandardError and the inner code does catch Exception
   def test_4
     subject(MyStandardError, Exception)
     expectations
+    assert $caught_in_inner, "Exception was not caught in inner"
   end
 
   # when an exception to raise is Exception and the inner code does not catch Exception
   def test_5
     subject(MyException, StandardError)
     expectations
+    assert !$caught_in_inner, "Exception was caught in inner"
   end
 
   # when an exception to raise is Exception and the inner code does catch Exception
   def test_6
     subject(MyException, Exception)
     expectations
+    assert $caught_in_inner, "Exception was not caught in inner"
   end
 
 end
