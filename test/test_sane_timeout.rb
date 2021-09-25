@@ -93,40 +93,40 @@ class TestTimeout < Test::Unit::TestCase
     assert !$not_raised_in_outer, "Exception was not raised in outer(2)"
   end
 
-  puts "when an exception to raise is not specified and the inner code does not catch Exception"
+  # when an exception to raise is not specified and the inner code does not catch Exception
   def test_1
     subject(nil, StandardError)
     expectations
   end
 
-  puts "when an exception to raise is not specified and the inner code does catch Exception"
+  # when an exception to raise is not specified and the inner code does catch Exception
   def test_2
     subject(nil, Exception)
     expectations
   end
 
-  puts "when an exception to raise is StandardError and the inner code does not catch Exception"
+  # when an exception to raise is StandardError and the inner code does not catch Exception
   class MyError < StandardError; end
   def test_3
     subject(MyError, StandardError)
     expectations
   end
 
-  puts "when an exception to raise is StandardError and the inner code does catch Exception"
+  # when an exception to raise is StandardError and the inner code does catch Exception
   class MyError2 < StandardError; end
   def test_4
     subject(MyError2, Exception)
     expectations
   end
 
-  puts "when an exception to raise is Exception and the inner code does not catch Exception"
+  # when an exception to raise is Exception and the inner code does not catch Exception
   class MyError3 < Exception; end
   def test_5
     subject(MyError3, StandardError)
     expectations
   end
 
-  puts "when an exception to raise is Exception and the inner code does catch Exception"
+  # when an exception to raise is Exception and the inner code does catch Exception
   class MyError4 < Exception; end
   def test_6
     subject(MyError4, Exception)
