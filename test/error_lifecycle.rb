@@ -14,7 +14,7 @@ def subject(error_to_raise, error_to_rescue)
   Timeout.timeout(0.001, error_to_raise){
     begin
       $inner_attempted = true
-      sleep 10
+      nil while true
     rescue error_to_rescue
       $caught_in_inner = true
     else
