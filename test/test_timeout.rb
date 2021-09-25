@@ -96,9 +96,8 @@ class TestTimeout < Test::Unit::TestCase
   end
 
   # when an exception to raise is StandardError and the inner code does not catch Exception
-  class MyError < StandardError; end
   def test_3
-    subject(MyError, StandardError)
+    subject(MyStandardError, StandardError)
 
     # EXPECTED
     assert $inner_attempted
@@ -114,9 +113,8 @@ class TestTimeout < Test::Unit::TestCase
   end
 
   # when an exception to raise is StandardError and the inner code does catch Exception
-  class MyError2 < StandardError; end
   def test_4
-    subject(MyError2, Exception)
+    subject(MyStandardError, Exception)
 
     # EXPECTED
     assert $inner_attempted
@@ -132,9 +130,8 @@ class TestTimeout < Test::Unit::TestCase
   end
 
   # when an exception to raise is Exception and the inner code does not catch Exception
-  class MyError3 < Exception; end
   def test_5
-    subject(MyError3, StandardError)
+    subject(MyException, StandardError)
 
     # EXPECTED
     assert $inner_attempted
@@ -147,9 +144,8 @@ class TestTimeout < Test::Unit::TestCase
   end
 
   # when an exception to raise is Exception and the inner code does catch Exception
-  class MyError4 < Exception; end
   def test_6
-    subject(MyError4, Exception)
+    subject(MyException, Exception)
 
     # EXPECTED
     assert $inner_attempted

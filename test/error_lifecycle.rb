@@ -1,3 +1,6 @@
+class MyStandardError < StandardError; end
+class MyException< Exception; end
+
 def subject(throws, catches)
   $inner_attempted = nil
   $inner_succeeded = nil
