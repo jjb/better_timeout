@@ -11,7 +11,7 @@ def subject(error_to_raise, error_to_rescue)
   $not_raised_in_outer = nil
   $outer_ensure = nil
 
-  Timeout.timeout(0.1, error_to_raise){
+  Timeout.timeout(0.001, error_to_raise){
     begin
       $inner_attempted = true
       sleep 10
