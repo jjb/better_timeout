@@ -67,9 +67,12 @@ class TestTimeout < Test::Unit::TestCase
     $inner_attempted=nil
     $inner_succeeded=nil
     $caught_in_inner=nil
+    $inner_ensure=nil
 
     $raised_in_outer=nil
     $not_raised_in_outer=nil
+    $outer_ensure=nil
+
     begin
       Timeout.timeout(0.1, throws){
         begin
@@ -79,12 +82,16 @@ class TestTimeout < Test::Unit::TestCase
           $caught_in_inner=true
         else
           $inner_succeeded=true
+        ensure
+          $inner_ensure=true
         end
       }
     rescue Exception
       $raised_in_outer = true
     else
       $not_raised_in_outer = true
+    ensure
+      $outer_ensure = true
     end
   end
 
@@ -96,7 +103,9 @@ class TestTimeout < Test::Unit::TestCase
     assert $inner_attempted
     assert !$inner_succeeded
     assert !$caught_in_inner
+    assert $inner_ensure
     assert $raised_in_outer && !$not_raised_in_outer
+    assert $outer_ensure
   end
 
   # when an exception to raise is not specified and the inner code does catch Exception
@@ -106,6 +115,8 @@ class TestTimeout < Test::Unit::TestCase
     # EXPECTED
     assert $inner_attempted
     assert !$inner_succeeded
+    assert $inner_ensure
+    assert $outer_ensure
 
     # WEIRD
     assert $caught_in_inner
@@ -122,6 +133,8 @@ class TestTimeout < Test::Unit::TestCase
     # EXPECTED
     assert $inner_attempted
     assert !$inner_succeeded
+    assert $inner_ensure
+    assert $outer_ensure
 
     # WEIRD
     assert $caught_in_inner
@@ -138,6 +151,8 @@ class TestTimeout < Test::Unit::TestCase
     # EXPECTED
     assert $inner_attempted
     assert !$inner_succeeded
+    assert $inner_ensure
+    assert $outer_ensure
 
     # WEIRD
     assert $caught_in_inner
@@ -155,6 +170,9 @@ class TestTimeout < Test::Unit::TestCase
     assert $inner_attempted
     assert !$inner_succeeded
     assert !$caught_in_inner
+    assert $inner_ensure
+    assert $outer_ensure
+
     assert $raised_in_outer && !$not_raised_in_outer
   end
 
@@ -166,6 +184,8 @@ class TestTimeout < Test::Unit::TestCase
     # EXPECTED
     assert $inner_attempted
     assert !$inner_succeeded
+    assert $inner_ensure
+    assert $outer_ensure
 
     # WEIRD
     assert $caught_in_inner

@@ -64,9 +64,12 @@ class TestTimeout < Test::Unit::TestCase
     $inner_attempted=nil
     $inner_succeeded=nil
     $caught_in_inner=nil
+    $inner_ensure=nil
 
     $raised_in_outer=nil
     $not_raised_in_outer=nil
+    $outer_ensure=nil
+
     begin
       Timeout.timeout(0.1, throws){
         begin
@@ -76,20 +79,27 @@ class TestTimeout < Test::Unit::TestCase
           $caught_in_inner=true
         else
           $inner_succeeded=true
+        ensure
+          $inner_ensure=true
         end
       }
     rescue Exception
       $raised_in_outer = true
     else
       $not_raised_in_outer = true
+    ensure
+      $outer_ensure = true
     end
   end
+
 
   def expectations
     assert $inner_attempted,  "Inner was not attempted"
     assert !$inner_succeeded, "Inner did not succeed"
     assert !$caught_in_inner, "Exception was caught in inner"
+    assert $inner_ensure, "Inner ensure was not reached"
     assert $raised_in_outer,  "Exception was not raised in outer"
+    assert $outer_ensure, "Outer ensure succeeded"
     assert !$not_raised_in_outer, "Exception was not raised in outer(2)"
   end
 
