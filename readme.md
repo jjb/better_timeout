@@ -1,6 +1,11 @@
 # SaneTimeout
 
-TODO: Write a gem description
+This is a fork of ruby 1.9.3 timeout which has the following behavior change:
+
+Regardless of what errors the timed code catches, `Timeout.timeout` will
+always raise an exception if the code times out.
+
+When the gem is installed, sane_timeout takes over Timeout.timeout in all cases.
 
 ## Installation
 
@@ -16,37 +21,9 @@ Or install it yourself as:
 
     $ gem install sane_timeout
 
-## Usage
 
-TODO: Write usage instructions here
+## Discussion/findings
 
-
-
-## Open Questions
-* on line 69, I had tried doing x.join based on the standard lib doing the
-same thing with the y thread. I assumed that kill is not synchromous so it's
-necessary to wait for x to die. However, doing this causes many things to break.
-I haven't been able to figure out why.
-* related, is there any reason to kill y before returning x.value?
-
-## To Do
-* determine best way to install sane_timeout so that it
-  replaces Timeout. possibly offer to modes, one where
-  Timeout is overwritten, another where sane_timeout is
-  invoked in its own namespace (SaneTimeout)
-
-## Code Improvement
-* remove the weird inner exception catching/filtering entirely?
-
-
-## Project Improvement
-* better name?
-* There is redundant code between test_timeout.rb and test_sane_timeout.rb
-because I wanted to annotate in the former and be DRY in the latter. Maybe this
-can somehow be improved.
-* hyphen or underscore?
-
-
-## odd design choice in standard lib:
+### In standlib
 * same type of error is raised inside thread and outside when specified
 * when not specified, Exception is raised inside, StandardError is raised outside
