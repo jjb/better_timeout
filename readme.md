@@ -13,7 +13,7 @@ When the gem is installed, better_timeout takes over Timeout.timeout in all case
 
 Add this line to your application's Gemfile:
 
-    gem 'better_timeout', git: 'https://github.com/jjb/better_timeout'
+    gem 'better_timeout', git: 'https://github.com/jjb/better_timeout' # not in rubygems yet, need to install from git
 
 And then execute:
 
