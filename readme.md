@@ -13,7 +13,7 @@ When the gem is installed, better_timeout takes over Timeout.timeout in all case
 
 Add this line to your application's Gemfile:
 
-    gem 'better_timeout'
+    gem 'better_timeout', git: 'https://github.com/jjb/better_timeout'
 
 And then execute:
 
@@ -29,3 +29,7 @@ Or install it yourself as:
 ### In standlib
 * same type of error is raised inside thread and outside when specified
 * when not specified, Exception is raised inside, StandardError is raised outside
+
+----
+
+_this project was formerly named sane_timeout_
