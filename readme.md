@@ -5,6 +5,8 @@ This is a fork of ruby 1.9.3 timeout which has the following behavior change:
 Regardless of what errors the timed code catches, `Timeout.timeout` will
 always raise an exception if the code times out.
 
+The stack traces might also be nicer, but this is still be full tested.
+
 When the gem is installed, better_timeout takes over Timeout.timeout in all cases.
 
 ## Installation
