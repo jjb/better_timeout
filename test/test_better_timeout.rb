@@ -1,5 +1,5 @@
 require 'test/unit'
-require_relative '../lib/sane_timeout.rb'
+require_relative '../lib/better_timeout.rb'
 require 'thread'
 
 class TestTimeout < Test::Unit::TestCase
@@ -58,7 +58,7 @@ class TestTimeout < Test::Unit::TestCase
   end
 
 
-  ### Tests that sane_timeout passes
+  ### Tests that better_timeout passes
 
   require_relative 'error_lifecycle.rb'
 
