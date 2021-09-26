@@ -11,22 +11,28 @@ def subject(error_to_raise, error_to_rescue)
   $not_raised_in_outer = nil
   $outer_ensure = nil
 
-  Timeout.timeout(0.001, error_to_raise){
-    begin
-      $inner_attempted = true
-      nil while true
-    rescue error_to_rescue
-      $caught_in_inner = true
-    else
-      $inner_succeeded = true
-    ensure
-      $inner_ensure = true
-    end
-  }
-rescue Exception
-  $raised_in_outer = true
-else
-  $not_raised_in_outer = true
-ensure
-  $outer_ensure = true
+  begin
+    Timeout.timeout(0.001, error_to_raise){
+      begin
+        $inner_attempted = true
+        nil while true
+      rescue error_to_rescue
+        $caught_in_inner = true
+      else
+        $inner_succeeded = true
+      ensure
+        $inner_ensure = true
+      end
+    }
+  rescue Exception
+    $raised_in_outer = true
+  else
+    $not_raised_in_outer = true
+  ensure
+    $outer_ensure = true
+  end
+
+  unless !!$not_raised_in_outer ^ !!$raised_in_outer
+    raise "something strange happened with the raised_in_outer variables"
+  end
 end

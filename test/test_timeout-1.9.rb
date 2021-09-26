@@ -74,7 +74,7 @@ class TestTimeout < Test::Unit::TestCase
     assert !$inner_succeeded
     assert !$caught_in_inner
     assert $inner_ensure
-    assert $raised_in_outer && !$not_raised_in_outer
+    assert $raised_in_outer
     assert $outer_ensure
   end
 
@@ -90,7 +90,7 @@ class TestTimeout < Test::Unit::TestCase
     assert $outer_ensure
 
     # BAD
-    assert !$raised_in_outer && $not_raised_in_outer
+    assert !$raised_in_outer
   end
 
   # when an exception to raise is StandardError and the inner code does not catch Exception
@@ -105,7 +105,7 @@ class TestTimeout < Test::Unit::TestCase
     assert $outer_ensure
 
     # BAD
-    assert !$raised_in_outer && $not_raised_in_outer
+    assert !$raised_in_outer
   end
 
   # when an exception to raise is StandardError and the inner code does catch Exception
@@ -120,7 +120,7 @@ class TestTimeout < Test::Unit::TestCase
     assert $outer_ensure
 
     # BAD
-    assert !$raised_in_outer && $not_raised_in_outer
+    assert !$raised_in_outer
   end
 
   # when an exception to raise is Exception and the inner code does not catch Exception
@@ -133,7 +133,7 @@ class TestTimeout < Test::Unit::TestCase
     assert !$caught_in_inner
     assert $inner_ensure
     assert $outer_ensure
-    assert $raised_in_outer && !$not_raised_in_outer
+    assert $raised_in_outer
   end
 
   # when an exception to raise is Exception and the inner code does catch Exception
@@ -148,7 +148,7 @@ class TestTimeout < Test::Unit::TestCase
     assert $outer_ensure
 
     # BAD
-    assert !$raised_in_outer && $not_raised_in_outer
+    assert !$raised_in_outer
   end
 
 end
