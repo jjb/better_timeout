@@ -63,32 +63,9 @@ class TestTimeout < Test::Unit::TestCase
   #       The ones marked weird, bad, and very bad should not, and their
   #       passing is demonstrating the brokenness.
 
-  def subject(throws, catches)
-    $inner_attempted=nil
-    $inner_succeeded=nil
-    $caught_in_inner=nil
+  require_relative 'error_lifecycle.rb'
 
-    $raised_in_outer=nil
-    $not_raised_in_outer=nil
-    begin
-      Timeout.timeout(0.1, throws){
-        begin
-          $inner_attempted=true
-          sleep 10
-        rescue catches
-          $caught_in_inner=true
-        else
-          $inner_succeeded=true
-        end
-      }
-    rescue Exception
-      $raised_in_outer = true
-    else
-      $not_raised_in_outer = true
-    end
-  end
-
-  puts "when an exception to raise is not specified and the inner code does not catch Exception"
+  # when an exception to raise is not specified and the inner code does not catch Exception
   def test_1
     subject(nil, StandardError)
 
@@ -96,81 +73,81 @@ class TestTimeout < Test::Unit::TestCase
     assert $inner_attempted
     assert !$inner_succeeded
     assert !$caught_in_inner
+    assert $inner_ensure
     assert $raised_in_outer && !$not_raised_in_outer
+    assert $outer_ensure
   end
 
-  puts "when an exception to raise is not specified and the inner code does catch Exception"
+  # when an exception to raise is not specified and the inner code does catch Exception
   def test_2
     subject(nil, Exception)
 
     # EXPECTED
     assert $inner_attempted
     assert !$inner_succeeded
-
-    # WEIRD
     assert $caught_in_inner
+    assert $inner_ensure
+    assert $outer_ensure
 
     # BAD
     assert !$raised_in_outer && $not_raised_in_outer
   end
 
-  puts "when an exception to raise is StandardError and the inner code does not catch Exception"
-  class MyError < StandardError; end
+  # when an exception to raise is StandardError and the inner code does not catch Exception
   def test_3
-    subject(MyError, StandardError)
+    subject(MyStandardError, StandardError)
 
     # EXPECTED
     assert $inner_attempted
     assert !$inner_succeeded
-
-    # WEIRD
     assert $caught_in_inner
+    assert $inner_ensure
+    assert $outer_ensure
 
     # BAD
     assert !$raised_in_outer && $not_raised_in_outer
   end
 
-  puts "when an exception to raise is StandardError and the inner code does catch Exception"
-  class MyError2 < StandardError; end
+  # when an exception to raise is StandardError and the inner code does catch Exception
   def test_4
-    subject(MyError2, Exception)
+    subject(MyStandardError, Exception)
 
     # EXPECTED
     assert $inner_attempted
     assert !$inner_succeeded
-
-    # WEIRD
     assert $caught_in_inner
+    assert $inner_ensure
+    assert $outer_ensure
 
     # BAD
     assert !$raised_in_outer && $not_raised_in_outer
   end
 
-  puts "when an exception to raise is Exception and the inner code does not catch Exception"
-  class MyError3 < Exception; end
+  # when an exception to raise is Exception and the inner code does not catch Exception
   def test_5
-    subject(MyError3, StandardError)
+    subject(MyException, StandardError)
 
     # EXPECTED
     assert $inner_attempted
     assert !$inner_succeeded
     assert !$caught_in_inner
+    assert $inner_ensure
+    assert $outer_ensure
     assert $raised_in_outer && !$not_raised_in_outer
   end
 
-  puts "when an exception to raise is Exception and the inner code does catch Exception"
-  class MyError4 < Exception; end
+  # when an exception to raise is Exception and the inner code does catch Exception
   def test_6
-    subject(MyError4, Exception)
+    subject(MyException, Exception)
 
     # EXPECTED
     assert $inner_attempted
     assert !$inner_succeeded
-
-    # WEIRD
     assert $caught_in_inner
+    assert $inner_ensure
+    assert $outer_ensure
 
-    # VERY BAD
+    # BAD
     assert !$raised_in_outer && $not_raised_in_outer
   end
 

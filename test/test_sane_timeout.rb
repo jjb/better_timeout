@@ -1,5 +1,5 @@
 require 'test/unit'
-require '../sane-timeout'
+require_relative '../lib/sane_timeout.rb'
 require 'thread'
 
 class TestTimeout < Test::Unit::TestCase
@@ -60,77 +60,57 @@ class TestTimeout < Test::Unit::TestCase
 
   ### Tests that sane_timeout passes
 
-  def subject(throws, catches)
-    $inner_attempted=nil
-    $inner_succeeded=nil
-    $caught_in_inner=nil
-
-    $raised_in_outer=nil
-    $not_raised_in_outer=nil
-    begin
-      Timeout.timeout(0.1, throws){
-        begin
-          $inner_attempted=true
-          sleep 10
-        rescue catches
-          $caught_in_inner=true
-        else
-          $inner_succeeded=true
-        end
-      }
-    rescue Exception
-      $raised_in_outer = true
-    else
-      $not_raised_in_outer = true
-    end
-  end
+  require_relative 'error_lifecycle.rb'
 
   def expectations
     assert $inner_attempted,  "Inner was not attempted"
     assert !$inner_succeeded, "Inner did not succeed"
-    assert !$caught_in_inner, "Exception was caught in inner"
+    assert $inner_ensure, "Inner ensure was not reached"
     assert $raised_in_outer,  "Exception was not raised in outer"
+    assert $outer_ensure, "Outer ensure succeeded"
     assert !$not_raised_in_outer, "Exception was not raised in outer(2)"
   end
 
-  puts "when an exception to raise is not specified and the inner code does not catch Exception"
+  # when an exception to raise is not specified and the inner code does not catch Exception
   def test_1
     subject(nil, StandardError)
     expectations
+    assert !$caught_in_inner, "Exception was caught in inner"
   end
 
-  puts "when an exception to raise is not specified and the inner code does catch Exception"
+  # when an exception to raise is not specified and the inner code does catch Exception
   def test_2
     subject(nil, Exception)
     expectations
+    assert $caught_in_inner, "Exception was not caught in inner"
   end
 
-  puts "when an exception to raise is StandardError and the inner code does not catch Exception"
-  class MyError < StandardError; end
+  # when an exception to raise is StandardError and the inner code does not catch Exception
   def test_3
-    subject(MyError, StandardError)
+    subject(MyStandardError, StandardError)
     expectations
+    assert $caught_in_inner, "Exception was not caught in inner"
   end
 
-  puts "when an exception to raise is StandardError and the inner code does catch Exception"
-  class MyError2 < StandardError; end
+  # when an exception to raise is StandardError and the inner code does catch Exception
   def test_4
-    subject(MyError2, Exception)
+    subject(MyStandardError, Exception)
     expectations
+    assert $caught_in_inner, "Exception was not caught in inner"
   end
 
-  puts "when an exception to raise is Exception and the inner code does not catch Exception"
-  class MyError3 < Exception; end
+  # when an exception to raise is Exception and the inner code does not catch Exception
   def test_5
-    subject(MyError3, StandardError)
+    subject(MyException, StandardError)
     expectations
+    assert !$caught_in_inner, "Exception was caught in inner"
   end
 
-  puts "when an exception to raise is Exception and the inner code does catch Exception"
-  class MyError4 < Exception; end
+  # when an exception to raise is Exception and the inner code does catch Exception
   def test_6
-    subject(MyError4, Exception)
+    subject(MyException, Exception)
     expectations
+    assert $caught_in_inner, "Exception was not caught in inner"
   end
 
 end
