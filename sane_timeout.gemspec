@@ -6,8 +6,8 @@ Gem::Specification.new do |gem|
   gem.name          = "better_timeout"
   gem.version       = '0.1'
   gem.authors       = ["John Joseph Bachir"]
-  gem.description   = %q{Better Timeout fixes Ruby standard lib Timeout}
-  gem.summary   = %q{Better Timeout fixes Ruby standard lib Timeout}
+  gem.description   = %q{Better Timeout always raises in the outer thread when there's a timeout}
+  gem.summary   = %q{Better Timeout always raises in the outer thread when there's a timeout}
   gem.homepage      = "https://github.com/jjb/better_timeout"
 
   gem.files         = `git ls-files`.split($/)
