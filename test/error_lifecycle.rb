@@ -3,12 +3,12 @@ class MyException< Exception; end
 
 def subject(error_to_raise, error_to_rescue)
   $inner_attempted = nil
-  $inner_succeeded = nil
-  $caught_in_inner = nil
+  $inner_else = nil
+  $inner_rescue = nil
   $inner_ensure = nil
 
-  $raised_in_outer = nil
-  $not_raised_in_outer = nil
+  $outer_rescue = nil
+  $outer_else = nil
   $outer_ensure = nil
 
   begin
@@ -17,22 +17,22 @@ def subject(error_to_raise, error_to_rescue)
         $inner_attempted = true
         nil while true
       rescue error_to_rescue
-        $caught_in_inner = true
+        $inner_rescue = true
       else
-        $inner_succeeded = true
+        $inner_else = true
       ensure
         $inner_ensure = true
       end
     }
   rescue Exception
-    $raised_in_outer = true
+    $outer_rescue = true
   else
-    $not_raised_in_outer = true
+    $outer_else = true
   ensure
     $outer_ensure = true
   end
 
-  unless !!$not_raised_in_outer ^ !!$raised_in_outer
-    raise "something strange happened with the raised_in_outer variables"
+  unless !!$outer_else ^ !!$outer_rescue
+    raise "something strange happened with the outer_rescue variables"
   end
 end

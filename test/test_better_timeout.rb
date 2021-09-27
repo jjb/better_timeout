@@ -64,53 +64,53 @@ class TestTimeout < Test::Unit::TestCase
 
   def expectations
     assert $inner_attempted,  "Inner was not attempted"
-    assert !$inner_succeeded, "Inner did not succeed"
+    assert !$inner_else, "Inner did not succeed"
     assert $inner_ensure, "Inner ensure was not reached"
-    assert $raised_in_outer,  "Exception was not raised in outer"
+    assert $outer_rescue,  "Exception was not raised in outer"
     assert $outer_ensure, "Outer ensure succeeded"
-    assert !$not_raised_in_outer, "Exception was not raised in outer(2)"
+    assert !$outer_else, "Exception was not raised in outer(2)"
   end
 
   # when an exception to raise is not specified and the inner code does not catch Exception
   def test_1
     subject(nil, StandardError)
     expectations
-    assert !$caught_in_inner, "Exception was caught in inner"
+    assert !$inner_rescue, "Exception was caught in inner"
   end
 
   # when an exception to raise is not specified and the inner code does catch Exception
   def test_2
     subject(nil, Exception)
     expectations
-    assert $caught_in_inner, "Exception was not caught in inner"
+    assert $inner_rescue, "Exception was not caught in inner"
   end
 
   # when an exception to raise is StandardError and the inner code does not catch Exception
   def test_3
     subject(MyStandardError, StandardError)
     expectations
-    assert $caught_in_inner, "Exception was not caught in inner"
+    assert $inner_rescue, "Exception was not caught in inner"
   end
 
   # when an exception to raise is StandardError and the inner code does catch Exception
   def test_4
     subject(MyStandardError, Exception)
     expectations
-    assert $caught_in_inner, "Exception was not caught in inner"
+    assert $inner_rescue, "Exception was not caught in inner"
   end
 
   # when an exception to raise is Exception and the inner code does not catch Exception
   def test_5
     subject(MyException, StandardError)
     expectations
-    assert !$caught_in_inner, "Exception was caught in inner"
+    assert !$inner_rescue, "Exception was caught in inner"
   end
 
   # when an exception to raise is Exception and the inner code does catch Exception
   def test_6
     subject(MyException, Exception)
     expectations
-    assert $caught_in_inner, "Exception was not caught in inner"
+    assert $inner_rescue, "Exception was not caught in inner"
   end
 
 end

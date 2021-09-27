@@ -72,10 +72,10 @@ class TestTimeout < Test::Unit::TestCase
 
     # EXPECTED
     assert $inner_attempted
-    assert !$inner_succeeded
-    assert !$caught_in_inner
+    assert !$inner_else
+    assert !$inner_rescue
     assert $inner_ensure
-    assert $raised_in_outer
+    assert $outer_rescue
     assert $outer_ensure
   end
 
@@ -85,13 +85,13 @@ class TestTimeout < Test::Unit::TestCase
 
     # EXPECTED
     assert $inner_attempted
-    assert !$inner_succeeded
+    assert !$inner_else
     assert $inner_ensure
     assert $outer_ensure
-    assert $raised_in_outer # was broken in 1.9
+    assert $outer_rescue # was broken in 1.9
 
     # WEIRD
-    assert !$caught_in_inner # was working in 1.9
+    assert !$inner_rescue # was working in 1.9
   end
 
   # when an exception to raise is StandardError and the inner code does not catch Exception
@@ -100,13 +100,13 @@ class TestTimeout < Test::Unit::TestCase
 
     # EXPECTED
     assert $inner_attempted
-    assert !$inner_succeeded
-    assert $caught_in_inner
+    assert !$inner_else
+    assert $inner_rescue
     assert $inner_ensure
     assert $outer_ensure
 
     # BAD
-    assert !$raised_in_outer
+    assert !$outer_rescue
   end
 
   # when an exception to raise is StandardError and the inner code does catch Exception
@@ -115,13 +115,13 @@ class TestTimeout < Test::Unit::TestCase
 
     # EXPECTED
     assert $inner_attempted
-    assert !$inner_succeeded
-    assert $caught_in_inner
+    assert !$inner_else
+    assert $inner_rescue
     assert $inner_ensure
     assert $outer_ensure
 
     # BAD
-    assert !$raised_in_outer
+    assert !$outer_rescue
   end
 
   # when an exception to raise is Exception and the inner code does not catch Exception
@@ -130,11 +130,11 @@ class TestTimeout < Test::Unit::TestCase
 
     # EXPECTED
     assert $inner_attempted
-    assert !$inner_succeeded
-    assert !$caught_in_inner
+    assert !$inner_else
+    assert !$inner_rescue
     assert $inner_ensure
     assert $outer_ensure
-    assert $raised_in_outer
+    assert $outer_rescue
   end
 
   # when an exception to raise is Exception and the inner code does catch Exception
@@ -143,13 +143,13 @@ class TestTimeout < Test::Unit::TestCase
 
     # EXPECTED
     assert $inner_attempted
-    assert !$inner_succeeded
-    assert $caught_in_inner
+    assert !$inner_else
+    assert $inner_rescue
     assert $inner_ensure
     assert $outer_ensure
 
     # BAD
-    assert !$raised_in_outer
+    assert !$outer_rescue
   end
 
 end
